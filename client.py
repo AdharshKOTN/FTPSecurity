@@ -12,7 +12,7 @@ try:
 except:
     print('Connection error')
 
-print('Connecting to ' + HOST + ' on Port ' + PORT)
+print('Connecting to ' + str(HOST) + ' on Port ' + str(PORT))
     #s.sendall(b'Hello, world')	#send message, exchange with code to obtain file
 								#client ui should loop here and access files
     #data = s.recv(1024)	#read server reply
