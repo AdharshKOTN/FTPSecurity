@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import socket
+import sys
 
 HOST = ''
 PORT = 63430 #number greater than 1023 and less than 65536
@@ -11,7 +12,7 @@ try:
     s.connect((HOST, PORT))	#connect to server
 except:
     print('Connection error, check the host or port number')
-	break
+	sys.exit()
 
 print('Connecting to ' + str(HOST) + ' on Port ' + str(PORT))
 while true:
@@ -19,7 +20,7 @@ while true:
 	if(cmnd == 'exit'):
 		break
     #s.sendall(b'Hello, world')	#send message, exchange with code to obtain file
-								#client ui should loop here and access files
+	#client ui should loop here and access files
     #data = s.recv(1024)	#read server reply
 s.close()
 print('Client should be closed now.')
