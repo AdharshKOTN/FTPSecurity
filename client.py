@@ -11,9 +11,9 @@ try:
 	#create socket object
     s.connect((HOST, PORT))	#connect to server
 except:
-    print('Connection error, check the host or port number')
+	print('Connection error, check the host or port number')
 	sys.exit()
-
+	
 print('Connecting to ' + str(HOST) + ' on Port ' + str(PORT))
 while true:
 	cmnd = input("Command:")
