@@ -15,7 +15,7 @@ except:
 	sys.exit()
 	
 print('Connecting to ' + str(HOST) + ' on Port ' + str(PORT))
-while true:
+while 1:
 	cmnd = input("Command:")
 	if(cmnd == 'exit'):
 		break
