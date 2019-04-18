@@ -22,13 +22,13 @@ while 1:
 	
 	with open('received_file', 'wb') as f:
 	print 'file opened'
-	while True:
-        print('receiving data...')
-        data = s.recv(1024)
-        print('data=%s', (data))
+	while 1:
+		print('receiving data...')
+		data = s.recv(1024)
+		print('data=%s', (data))
 		if not data:
 			break
 			# write data to a file
 		f.write(data)
-
+		
 s.close()
