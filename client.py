@@ -24,13 +24,13 @@ while 1:
 		filename = input('Provide File Name: ')
 		file = open(filename, 'rb')
 		print('Filename has been sent to the server.')
-		s.send(file)
-		file_data = file.read(1024)
+		#s.send(file)
+		file_data = bytes(file.readline(string, 'utf-8'))
 		while (file_data):
 			s.send(file_data)
 			print('Sent ',repr(file_data))
-			file_data = f.read(1024)
-		f.close()
+			file_data = bytes(file.readline(string, 'utf-8'))
+		file.close()
 		print('The file has finished sending')
 	elif (cmnd == 'Access File'):
 		filename = input('Provide File Name: ')
