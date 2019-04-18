@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 import socket
 import sys
-from tkinter import filedialog
-from tkinter import *
 
 HOST = ''
 PORT = 63430 #number greater than 1023 and less than 65536
