@@ -25,10 +25,10 @@ while 1:
 		file = open(filename, 'r')
 		print('Filename has been sent to the server.')
 		file_data = file.read(1024)
-		while (l):
-			s.send(l)
-			print('Sent ',repr(l))
-			l = f.read(1024)
+		while (file_data):
+			s.send(file_data)
+			print('Sent ',repr(file_data))
+			file_data = f.read(1024)
 		f.close()
 		print('The file has finished sending')
 	elif (cmnd == 'Access File'):
