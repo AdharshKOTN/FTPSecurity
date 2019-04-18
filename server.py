@@ -20,8 +20,8 @@ while 1:
 							#returns socket object for connection and client address
     print('connected by', addr)
 	
-	with open('received_file', 'wb') as f:
-	print 'file opened'
+	file = open('received_file', 'wb')
+	print ('file opened')
 	while 1:
 		print('receiving data...')
 		data = s.recv(1024)
@@ -29,6 +29,6 @@ while 1:
 		if not data:
 			break
 			# write data to a file
-		f.write(data)
-		
+		file.write(data)
+	file.close()
 s.close()
