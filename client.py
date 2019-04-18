@@ -22,8 +22,9 @@ while 1:
 		sys.exit()
 	elif (cmnd == 'Send File'):
 		filename = input('Provide File Name: ')
-		file = open(filename, 'r')
+		file = open(filename, 'rb')
 		print('Filename has been sent to the server.')
+		s.send(file)
 		file_data = file.read(1024)
 		while (file_data):
 			s.send(file_data)
