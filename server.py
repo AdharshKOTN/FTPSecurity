@@ -16,11 +16,10 @@ s.listen(1) #enables server to be available connection
 print('Socket is listening')
 
 while 1:
-    conn, addr = s.accept() #waits for connection from client
-							#returns socket object for connection and client address
-    print('connected by', addr)
-	
-	file = open('received_file', 'wb')
+	conn, addr = s.accept() #waits for connection from client
+	#returns socket object for connection and client address
+	print('connected by', addr)
+	file = open('recieved_file', 'wb')
 	print ('file opened')
 	while 1:
 		print('receiving data...')
@@ -28,7 +27,7 @@ while 1:
 		print('data=%s', (data))
 		if not data:
 			break
-			# write data to a file
+			#write data to a file
 		file.write(data)
 	file.close()
 s.close()
