@@ -29,7 +29,7 @@ while 1:
 		s.send(client_response.encode())
 		filename = input('Provide File Name: ')
 		file = open(filename, 'rb')
-		print('Filename has been sent to the server.')
+		#print('Filename has been sent to the server.')
 		#s.send(file)
 		file_data = file.readline()
 		while (file_data):

@@ -21,7 +21,7 @@ while 1:
 	#returns socket object for connection and client address
 	print('connected by', addr)
 	while 1:
-		print('Waiting for Client Command')
+		print('Waiting for Client Command....')
 		client_response = connection.recv(1024).decode("utf-8")
 		if(client_response):
 			print('Client Command: ' + str(client_response))
@@ -33,16 +33,17 @@ while 1:
 				print('Client is sending a file')
 				print('Recieving File...')
 				while 1:
+					#server is recieving the data
 					file_data = connection.recv(1024)
-					if(file_data):
-						print(file_data)
-					else:
+					if(file_data):	#if the file data is valid or has some value
+						print('Data recieved is:' + str(file_data))
+					else:			#if the file has a lack of data or there is no more data to be sent
 						print('File has been fully transferred')
 						break
 			elif (str(client_response) == 'AF002'):
 				print('Sending File...')
 				file_name = connection.recv(1024).decode("utf-8")
-				print('Server will send the file called: ' + file_name)
+				print('Server will send the file called: ' + str(file_name))
 				file = open(file_name, 'rb')
 				print('File: ' + file_name + ' has been opened on the server.')
 				#s.send(file)
