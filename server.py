@@ -33,7 +33,7 @@ while 1:
 				print('Client is sending a file')
 				print('Recieving File...')
 				while 1:
-					file_data = connection.recv(1024).decode("utf-8")
+					file_data = connection.recv(1024)
 					if(file_data):
 						print(file_data)
 					else:
