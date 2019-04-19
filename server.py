@@ -48,7 +48,7 @@ while 1:
 				#s.send(file)
 				file_data = file.readline()
 				while (file_data):
-					s.send(file_data.encode())
+					s.send(file_data)
 					print('Sent ',repr(file_data))
 					file_data = file.readline()
 				file.close()
