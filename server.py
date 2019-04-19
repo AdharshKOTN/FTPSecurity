@@ -44,7 +44,7 @@ while 1:
 				file_name = connection.recv(1024).decode("utf-8")
 				print('Server will send the file called: ' + file_name)
 				file = open(file_name, 'rb')
-				print('File: ' + filename + ' has been opened on the server.')
+				print('File: ' + file_name + ' has been opened on the server.')
 				#s.send(file)
 				file_data = file.readline()
 				while (file_data):
