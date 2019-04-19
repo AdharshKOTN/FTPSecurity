@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import socket
+import select
 
 HOST = ''
 PORT = 63430 #number greater than 1023 and less than 65536
@@ -34,8 +35,10 @@ while 1:
 				print('Recieving File...')
 				while 1:
 					#server is recieving the data
-					file_data = connection.recv(1024)
-					if(file_data):	#if the file data is valid or has some value
+					r, _, _ = select.select([connection], [], [])
+					if r:
+						file_data = connection.recv(1024).decode()
+						#if the file data is valid or has some value
 						print('Data recieved is:' + str(file_data))
 					else:			#if the file has a lack of data or there is no more data to be sent
 						print('File has been fully transferred')
