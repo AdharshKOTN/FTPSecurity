@@ -31,11 +31,11 @@ while 1:
 		file = open(filename, 'rb')
 		print('Filename has been sent to the server.')
 		#s.send(file)
-		file_data = file.readline(string, 'utf-8')
+		file_data = file.readline()
 		while (file_data):
 			s.send(file_data.encode())
 			print('Sent ',repr(file_data))
-			file_data = bytes(file.readline(string, 'utf-8'))
+			file_data = file.readline()
 		file.close()
 		print('The file has finished sending')
 	elif (cmnd == 'Access File'):
