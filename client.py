@@ -45,7 +45,7 @@ while 1:
 		s.send(filename.encode())
 		print('The filename has been sent')
 		while 1:
-			file_data = connection.recv(1024).decode("utf-8")
+			file_data = s.recv(1024).decode("utf-8")
 			if(file_data):
 				print(file_data)
 			else:
