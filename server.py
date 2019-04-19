@@ -20,14 +20,14 @@ while 1:
 	connection, addr = s.accept() #waits for connection from client
 	#returns socket object for connection and client address
 	print('connected by', addr)
-	label: wait
-	print('Waiting for Client Command')
-	client_response = connection.recv(1024).decode
-	if(client_response):
-		print('Client Response: ' + client_response)
-	else:
-		print('Client response has finished reveiving')
-		goto wait
+	while 1:
+		print('Waiting for Client Command')
+		client_response = connection.recv(1024).decode
+		if(client_response):
+			print('Client Response: ' + client_response)
+		else:
+			print('Client response has finished reveiving')
+			break
 	# file = open('recieved_file', 'wb')
 	# print ('file opened')
 	# while 1:
