@@ -19,9 +19,13 @@ while 1:
 	cmnd = input("Exit | Send File | Access File:\n")
 	if (cmnd == 'Exit'):
 		print('Exiting Client Application')
+		client_repsonse = 'EX000'
+		s.send(client_repsonse.encode())
+		s.close()
+		print('Client should be closed now.')
 		sys.exit()
 	elif (cmnd == 'Send File'):
-		client_response = 'Receiving file'
+		client_response = 'SF001'
 		s.send(client_response.encode())
 		# filename = input('Provide File Name: ')
 		# file = open(filename, 'rb')
@@ -35,6 +39,8 @@ while 1:
 		# file.close()
 		print('The file has finished sending')
 	elif (cmnd == 'Access File'):
+		access_file = 'AF002'
+		s.send(access_file.encode())
 		filename = input('Provide File Name: ')
 		s.send(filename.encode())
 		print('The filename has been sent')
@@ -43,7 +49,5 @@ while 1:
     #s.sendall(b'Hello, world')	#send message, exchange with code to obtain file
 	#client ui should loop here and access files
     #data = s.recv(1024)	#read server reply
-s.close()
-print('Client should be closed now.')
 
 #print('Received', repr(data))	#print server reply

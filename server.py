@@ -24,11 +24,17 @@ while 1:
 		print('Waiting for Client Command')
 		client_response = connection.recv(1024).decode("utf-8")
 		if(client_response):
-			print('Client Response: ' + str(client_response))
-			if(str(client_response) == 'Exit'):
+			print('Client Command: ' + str(client_response))
+			if(str(client_response) == 'EX000'):
 				connection.close()
+			elif (str(client_response) == 'SF001'):
+				print('Recieving File...')
+				file_name = connection.recv(1024).decode("utf-8)
+				print('Will Send the file called: ' + file_name)
+			elif (str(client_response) == 'AF002'):
+				print('Sending File...')
 		else:
-			print('Client response has finished reveiving')
+			print('Client ' + addr + 'has exited the session')
 			break
 	# file = open('recieved_file', 'wb')
 	# print ('file opened')
