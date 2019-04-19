@@ -20,7 +20,7 @@ while 1:
 	connection, addr = s.accept() #waits for connection from client
 	#returns socket object for connection and client address
 	print('connected by', addr)
-	client_response = connection.recv(16)
+	client_response = connection.recv(1024).decode
 	if(client_response):
 		print('Client Response: ' + client_response)
 	else:
