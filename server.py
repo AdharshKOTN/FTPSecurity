@@ -30,7 +30,7 @@ while 1:
 		# print('data=%s', (data))
 		# if not data:
 			# break
-			write data to a file
+			# write data to a file
 		# file.write(data)
 	# file.close()
 s.close()
