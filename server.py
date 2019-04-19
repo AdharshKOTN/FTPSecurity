@@ -24,7 +24,7 @@ while 1:
 		print('Waiting for Client Command')
 		client_response = connection.recv(1024).decode
 		if(client_response):
-			print('Client Response: ' + client_response)
+			print('Client Response: ' + str(client_response))
 		else:
 			print('Client response has finished reveiving')
 			break
