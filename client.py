@@ -46,11 +46,11 @@ while 1:
 		print('The filename has been sent')
 		while 1:
 			file_data = connection.recv(1024).decode("utf-8")
-				if(file_data):
-					print(file_data)
-				else:
-					print('File has been fully transferred')
-					break
+			if(file_data):
+				print(file_data)
+			else:
+				print('File has been fully transferred')
+				break
 	else:
 		print('Not a valid command')
     #s.sendall(b'Hello, world')	#send message, exchange with code to obtain file
