@@ -14,7 +14,7 @@ except socket.error as msg:
 
 print('Awaiting connection....')
 s.listen(1) #enables server to be available connection
-print('Socket is listening')
+#print('Socket is listening')
 
 while 1:
 	connection, addr = s.accept() #waits for connection from client
@@ -26,24 +26,33 @@ while 1:
 		if(client_response):
 			print('Client Command: ' + str(client_response))
 			if(str(client_response) == 'EX000'):
+				print('Client wants to exit the session')
 				connection.close()
+				print('Client ' + addr + 'has exited the session')
 			elif (str(client_response) == 'SF001'):
+				print('Client is sending a file')
 				print('Recieving File...')
-				file_name = connection.recv(1024).decode("utf-8")
-				print('Will Send the file called: ' + file_name)
+				while 1:
+					file_data = connection.recv(1024).decode("utf-8")
+					if(file_data):
+						print(file_data)
+					else:
+						print('File has been fully transferred')
+						break
 			elif (str(client_response) == 'AF002'):
 				print('Sending File...')
+				file_name = connection.recv(1024).decode("utf-8")
+				print('Server will send the file called: ' + file_name)
+				file = open(filename, 'rb')
+				print('File: ' + filename + ' has been opened on the server.')
+				#s.send(file)
+				file_data = file.readline(string, 'utf-8')
+				while (file_data):
+					s.send(file_data.encode())
+					print('Sent ',repr(file_data))
+					file_data = bytes(file.readline(string, 'utf-8'))
+				file.close()
+				print('The file has finished sending')
 		else:
-			print('Client ' + addr + 'has exited the session')
+			print('Error: No message sent or message is decoded improperly.')
 			break
-	# file = open('recieved_file', 'wb')
-	# print ('file opened')
-	# while 1:
-		# print('receiving data...')
-		# data = s.recv(1024)
-		# print('data=%s', (data))
-		# if not data:
-			# break
-			# write data to a file
-		# file.write(data)
-	# file.close()

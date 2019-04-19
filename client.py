@@ -27,16 +27,16 @@ while 1:
 	elif (cmnd == 'Send File'):
 		client_response = 'SF001'
 		s.send(client_response.encode())
-		# filename = input('Provide File Name: ')
-		# file = open(filename, 'rb')
-		# print('Filename has been sent to the server.')
-		# s.send(file)
-		# file_data = bytes(file.readline(string, 'utf-8'))
-		# while (file_data):
-			# s.send(file_data)
-			# print('Sent ',repr(file_data))
-			# file_data = bytes(file.readline(string, 'utf-8'))
-		# file.close()
+		filename = input('Provide File Name: ')
+		file = open(filename, 'rb')
+		print('Filename has been sent to the server.')
+		#s.send(file)
+		file_data = file.readline(string, 'utf-8')
+		while (file_data):
+			s.send(file_data.encode())
+			print('Sent ',repr(file_data))
+			file_data = bytes(file.readline(string, 'utf-8'))
+		file.close()
 		print('The file has finished sending')
 	elif (cmnd == 'Access File'):
 		access_file = 'AF002'
@@ -44,6 +44,13 @@ while 1:
 		filename = input('Provide File Name: ')
 		s.send(filename.encode())
 		print('The filename has been sent')
+		while 1:
+			file_data = connection.recv(1024).decode("utf-8")
+				if(file_data):
+					print(file_data)
+				else:
+					print('File has been fully transferred')
+					break
 	else:
 		print('Not a valid command')
     #s.sendall(b'Hello, world')	#send message, exchange with code to obtain file
