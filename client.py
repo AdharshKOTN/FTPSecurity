@@ -21,7 +21,8 @@ while 1:
 		print('Exiting Client Application')
 		sys.exit()
 	elif (cmnd == 'Send File'):
-		s.send(b 'Receiving File')
+		client_response = 'Receiving file'
+		s.send(client_response.encode())
 		# filename = input('Provide File Name: ')
 		# file = open(filename, 'rb')
 		# print('Filename has been sent to the server.')
@@ -35,7 +36,7 @@ while 1:
 		print('The file has finished sending')
 	elif (cmnd == 'Access File'):
 		filename = input('Provide File Name: ')
-		s.send(b filename)
+		s.send(filename.encode())
 		print('The filename has been sent')
     #s.sendall(b'Hello, world')	#send message, exchange with code to obtain file
 	#client ui should loop here and access files
