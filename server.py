@@ -29,7 +29,7 @@ while 1:
 				connection.close()
 			elif (str(client_response) == 'SF001'):
 				print('Recieving File...')
-				file_name = connection.recv(1024).decode("utf-8)
+				file_name = connection.recv(1024).decode("utf-8")
 				print('Will Send the file called: ' + file_name)
 			elif (str(client_response) == 'AF002'):
 				print('Sending File...')
