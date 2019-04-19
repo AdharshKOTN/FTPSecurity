@@ -22,7 +22,7 @@ while 1:
 	print('connected by', addr)
 	while 1:
 		print('Waiting for Client Command')
-		client_response = connection.recv(1024).decode
+		client_response = connection.recv(1024).decode("utf-8")
 		if(client_response):
 			print('Client Response: ' + str(client_response))
 		else:
