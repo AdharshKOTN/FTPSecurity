@@ -16,7 +16,7 @@ except:
 	
 print('Connecting to ' + str(HOST) + ' on Port ' + str(PORT))
 while 1:
-	cmnd = input("Exit | Send File | Transfer File:\n")
+	cmnd = input("Exit | Send File | Access File:\n")
 	if (cmnd == 'Exit'):
 		print('Exiting Client Application')
 		sys.exit()
@@ -38,6 +38,8 @@ while 1:
 		filename = input('Provide File Name: ')
 		s.send(filename.encode())
 		print('The filename has been sent')
+	else:
+		print('Not a valid command')
     #s.sendall(b'Hello, world')	#send message, exchange with code to obtain file
 	#client ui should loop here and access files
     #data = s.recv(1024)	#read server reply
