@@ -20,8 +20,11 @@ while 1:
 	connection, addr = s.accept() #waits for connection from client
 	#returns socket object for connection and client address
 	print('connected by', addr)
-	client_response = connection.recv()
-	print('Client Response: ' + client_response)
+	client_response = connection.recv(16)
+	if(client_response):
+		print('Client Response: ' + client_response)
+	else:
+		break
 	# file = open('recieved_file', 'wb')
 	# print ('file opened')
 	# while 1:
