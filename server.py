@@ -25,6 +25,8 @@ while 1:
 		client_response = connection.recv(1024).decode("utf-8")
 		if(client_response):
 			print('Client Response: ' + str(client_response))
+			if(str(client_response) == 'Exit'):
+				connection.close()
 		else:
 			print('Client response has finished reveiving')
 			break
@@ -39,4 +41,3 @@ while 1:
 			# write data to a file
 		# file.write(data)
 	# file.close()
-connection.close()
