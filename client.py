@@ -21,16 +21,17 @@ while 1:
 		print('Exiting Client Application')
 		sys.exit()
 	elif (cmnd == 'Send File'):
-		filename = input('Provide File Name: ')
-		file = open(filename, 'rb')
-		print('Filename has been sent to the server.')
-		#s.send(file)
-		file_data = bytes(file.readline(string, 'utf-8'))
-		while (file_data):
-			s.send(file_data)
-			print('Sent ',repr(file_data))
-			file_data = bytes(file.readline(string, 'utf-8'))
-		file.close()
+		s.send('Receiving File')
+		# filename = input('Provide File Name: ')
+		# file = open(filename, 'rb')
+		# print('Filename has been sent to the server.')
+		# s.send(file)
+		# file_data = bytes(file.readline(string, 'utf-8'))
+		# while (file_data):
+			# s.send(file_data)
+			# print('Sent ',repr(file_data))
+			# file_data = bytes(file.readline(string, 'utf-8'))
+		# file.close()
 		print('The file has finished sending')
 	elif (cmnd == 'Access File'):
 		filename = input('Provide File Name: ')
