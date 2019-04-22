@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 import socket
 import select
+import sys
+
 
 HOST = ''
 PORT = 63430 #number greater than 1023 and less than 65536
@@ -20,43 +22,58 @@ s.listen(1) #enables server to be available connection
 while 1:
 	connection, addr = s.accept() #waits for connection from client
 	#returns socket object for connection and client address
-	print('connected by', addr)
+	print('Connected by: ' + str(addr))
 	while 1:
 		print('Waiting for Client Command....')
-		client_response = connection.recv(1024).decode("utf-8")
+		client_response = connection.recv(1024).decode()
 		if(client_response):
 			print('Client Command: ' + str(client_response))
-			if(str(client_response) == 'EX000'):
+			if(str(client_response) == 'CEX000'):
 				print('Client wants to exit the session')
 				connection.close()
-				print('Client ' + addr + 'has exited the session')
-			elif (str(client_response) == 'SF001'):
+				print('Client ' + str(addr) + 'has exited the session')
+				break
+			elif (str(client_response) == 'CSF001'):
 				print('Client is sending a file')
 				print('Recieving File...')
+				file_data = connection.recv(1024).decode()
 				while 1:
-					#server is recieving the data
-					r, _, _ = select.select([connection], [], [])
-					if r:
-						file_data = connection.recv(1024).decode()
-						#if the file data is valid or has some value
-						print('Data recieved is:' + str(file_data))
-					else:			#if the file has a lack of data or there is no more data to be sent
-						print('File has been fully transferred')
+					print('Recieved: ' + file_data)
+					if (file_data == 'CEOF004'):
+						print('DEBUG: exit the inner loop')
 						break
-			elif (str(client_response) == 'AF002'):
+					else:
+						file_data = connection.recv(1024).decode()
+						#print('Data from file: ' + file_data)
+			elif (str(client_response) == 'CAF002'):
 				print('Sending File...')
-				file_name = connection.recv(1024).decode("utf-8")
-				print('Server will send the file called: ' + str(file_name))
-				file = open(file_name, 'rb')
+				#check if the file exists on the server
+				#if it doesn't let the client know
+				file_name = connection.recv(1024).decode()
+				while 1:
+					print('Server will send the file called: ' + str(file_name))
+					try:
+						file = open(file_name, 'rb')
+						break
+					except:
+						file_does_not_exist = 'File does not exist.'
+						print('Client is attempting to access file that is not available.')
+						connection.send(file_does_not_exist.encode())
+						file_name = connection.recv(1024).decode()
+				#open the file on the server and send the data to the client
 				print('File: ' + file_name + ' has been opened on the server.')
-				#s.send(file)
 				file_data = file.readline()
 				while (file_data):
-					s.send(file_data)
+					connection.send(file_data)
 					print('Sent ',repr(file_data))
 					file_data = file.readline()
 				file.close()
 				print('The file has finished sending')
+				eof = 'SEOF004'
+				connection.send(eof.encode())
+			elif (str(client_response) == 'SECRCL005'):
+				print('Secret Command Activated. Turning server off.')
+				sys.exit()
 		else:
 			print('Error: No message sent or message is decoded improperly.')
 			break
