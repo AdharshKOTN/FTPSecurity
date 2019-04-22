@@ -17,18 +17,25 @@ except:
 print('Connecting to ' + str(HOST) + ' on Port ' + str(PORT))
 while 1:
 	cmnd = input("Exit | Send File | Access File:\n")
-	if (cmnd == 'Exit'):
+	cmnd = cmnd.lower()
+	print(cmnd)
+	if (cmnd == 'exit'):
 		print('Exiting Client Application')
-		client_repsonse = 'EX000'
-		s.send(client_repsonse.encode())
+		client_exit = 'CEX000'
+		s.send(client_exit.encode())
 		s.close()
 		print('Client should be closed now.')
 		sys.exit()
-	elif (cmnd == 'Send File'):
-		client_response = 'SF001'
-		s.send(client_response.encode())
-		filename = input('Provide File Name: ')
-		file = open(filename, 'rb')
+	elif (cmnd == 'send file'):
+		client_send = 'CSF001'
+		s.send(client_send.encode())
+		while 1:
+			filename = input('Provide File Name: ')
+			try:
+				file = open(filename, 'rb')
+				break
+			except:
+				print('File does not exist.')
 		#print('Filename has been sent to the server.')
 		#s.send(file)
 		file_data = file.readline()
@@ -36,25 +43,34 @@ while 1:
 			s.send(file_data)
 			print('Sent ',repr(file_data))
 			file_data = file.readline()
+		eof = 'CEOF004'
+		s.send(eof.encode())
 		file.close()
 		print('The file has finished sending')
-	elif (cmnd == 'Access File'):
-		access_file = 'AF002'
+	elif (cmnd == 'access file'):
+		access_file = 'CAF002'
 		s.send(access_file.encode())
-		filename = input('Provide File Name: ')
-		s.send(filename.encode())
-		print('The filename has been sent')
 		while 1:
-			file_data = s.recv(1024).decode("utf-8")
-			if(file_data):
-				print(file_data)
+			filename = input('Provide File Name: ')
+			s.send(filename.encode())
+			file_status = s.recv(1024).decode()
+			if(file_status == 'File does not exist.'):
+				print('File does not exist.')
 			else:
-				print('File has been fully transferred')
 				break
+		print('The filename has been sent')
+		file_data = s.recv(1024).decode()
+		while 1:
+			print('Recieved: ' + file_data)
+			if (file_data == 'SEOF004'):
+				print('DEBUG: exit the inner loop')
+				break
+			else:
+				file_data = s.recv(1024).decode()
+	elif (cmnd == 'secret close'):
+		secret = 'SECRCL005'
+		s.send(secret.encode())
+		print('Secret Command accepted. Server and Client Exiting.')
+		sys.exit()
 	else:
 		print('Not a valid command')
-    #s.sendall(b'Hello, world')	#send message, exchange with code to obtain file
-	#client ui should loop here and access files
-    #data = s.recv(1024)	#read server reply
-
-#print('Received', repr(data))	#print server reply
