@@ -52,30 +52,33 @@ while 1:
 	#returns socket object for connection and client address
 	print('Connected by: ' + str(addr))
 	while 1:
-		userEncPass = connection.recv(1024).decode("utf-8")
-		#print(userEncPass)
 		userDetails = connection.recv(1024).decode("utf-8")
 		#print(userDetails)
 		userDetailsArr = userDetails.split(",")
 		username = userDetailsArr[0]
 		password = userDetailsArr[1]
-		if(_confirmEncryption(username, userEncPass) == False):
-			connection.send('EAF008'.encode("utf-8"))
-			continue
-		else:
-			connection.send('EAS009'.encode("utf-8"))
 		
 		print('Obtained details from user: ' + str(username))
-		if(_confirmAccess(username,password) == False):
+		if(_confirmAccess(username,password) == False or username not in _passwords.keys()):
 			print('User Authentication Failed')
 			passAuth = 'SAF010'
 			connection.send(passAuth.encode())
-			print('Awaiting next set of user details')
-			userDetails = connection.recv(1024).decode("utf-8")
+			print('Awaiting next set of user details...')
 		else:
 			passAuth = 'SAS011'
 			connection.send(passAuth.encode("utf-8"))
-			print('Welcome ' + str(username))
+			print(str(username) + ' is logged in')
+			break
+	while 1:
+		userEncPass = connection.recv(1024).decode("utf-8")
+		#print(userEncPass)
+		if(_confirmEncryption(username, userEncPass) == False or username not in _encpass.keys()):
+			print('Encryption Passcode Fail')
+			connection.send('SEAF008'.encode("utf-8"))
+			continue
+		else:
+			print('Encryption Passcode Pass')
+			connection.send('SEAS009'.encode("utf-8"))
 			break
 		
 	while 1:
