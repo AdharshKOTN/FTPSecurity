@@ -3,18 +3,19 @@ import socket
 import select
 import sys
 from simplecrypt import encrypt, decrypt
+import base64
 
 HOST = ''
 PORT = 63430 #number greater than 1023 and less than 65536
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-
+#protected list of passwords
 _passwords = {
 	"admin":"admin1",
 	"user1":"pass1"
 }
-
+#protected list of encryption passwords
 _encpass = {
 	"admin":"password1",
 	"user1":"password2"
@@ -51,35 +52,35 @@ while 1:
 	#returns socket object for connection and client address
 	print('Connected by: ' + str(addr))
 	while 1:
-		userEncPass = connection.recv(1024).decode()
-		print(userEncPass)
-		userDetails = connection.recv(1024).decode()
-		print(userDetails)
+		userEncPass = connection.recv(1024).decode("utf-8")
+		#print(userEncPass)
+		userDetails = connection.recv(1024).decode("utf-8")
+		#print(userDetails)
 		userDetailsArr = userDetails.split(",")
 		username = userDetailsArr[0]
 		password = userDetailsArr[1]
 		if(_confirmEncryption(username, userEncPass) == False):
-			connection.send('fail'.encode())
+			connection.send('EAF008'.encode("utf-8"))
 			continue
 		else:
-			connection.send('pass'.encode())
+			connection.send('EAS009'.encode("utf-8"))
 		
-		print('Obtained details from user: ' + str(username) + ' password provided: ' + str(password))
+		print('Obtained details from user: ' + str(username))
 		if(_confirmAccess(username,password) == False):
 			print('User Authentication Failed')
-			passAuth = 'fail'
+			passAuth = 'SAF010'
 			connection.send(passAuth.encode())
 			print('Awaiting next set of user details')
-			userDetails = connection.recv(1024).decode()
+			userDetails = connection.recv(1024).decode("utf-8")
 		else:
-			passAuth = 'pass'
-			connection.send(passAuth.encode())
+			passAuth = 'SAS011'
+			connection.send(passAuth.encode("utf-8"))
 			print('Welcome ' + str(username))
 			break
 		
 	while 1:
 		print('Waiting for Client Command....')
-		client_response = connection.recv(1024).decode()
+		client_response = connection.recv(1024).decode("utf-8")
 		if(client_response):
 			print('Client Command: ' + str(client_response))
 			if(str(client_response) == 'CEX000'):
@@ -100,37 +101,40 @@ while 1:
 
 				s.shutdown(socket.SHUT_WR)
 				file_data = connection.recv(1024)
+				print('Data before decrypt: ' + str(file_data))
 				file_data = decrypt(_encpass.get(username), file_data).decode("utf-8")
-				print("this is from the file: " + file_data)
+				print("Data after decrypt: " + str(file_data))
 				file.write(file_data)
 				
 			elif (str(client_response) == 'CAF002'):
 				print('Sending File...')
 				
-				file_name = connection.recv(1024).decode()
+				file_name = connection.recv(1024).decode("utf-8")
 				while 1:
 					print('Server will find the file called: ' + str(file_name))
 					try:
 						file = open(file_name, 'r')
 						break
 					except:
-						file_does_not_exist = 'File does not exist.'
+						file_does_not_exist = 'SFDNE006'
 						print('Client is attempting to access file that is not available.')
-						connection.send(file_does_not_exist.encode())
-						file_name = connection.recv(1024).decode()
-				file_does_exist = 'File does exist.'
-				connection.send(file_does_exist.encode())
+						connection.send(file_does_not_exist.encode("utf-8"))
+						file_name = connection.recv(1024).decode("utf-8")
+				file_does_exist = 'SFDE007'
+				connection.send(file_does_exist.encode("utf-8"))
 				#open the file on the server and send the data to the client
 				print('File: ' + file_name + ' has been opened on the server.')
 				file_data = file.read()
+				print('Data before encryption: ' + str(file_data))
 				file_data = encrypt(_encpass.get(username), file_data)
+				print('Data after encryption: ' + str(file_data))
 				#print(file_data)
 				connection.send(file_data)
 				
 				file.close()
 				print('The file has finished sending')
 				
-			elif (str(client_response) == 'SECRCL005'):
+			elif (str(client_response) == 'CSECRCL005'):
 				print('Secret Command Activated. Turning server off.')
 				sys.exit()
 		else:
