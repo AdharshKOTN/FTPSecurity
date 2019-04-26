@@ -31,20 +31,39 @@ print('Connecting to ' + str(HOST) + ' on Port ' + str(PORT))
 #val = 3
 #_setAuthCount(val)
 
+enc1 = enc('temp')
+
 username = input("Username: ")
 password = getpass.getpass(prompt = 'Password: ')
 userDetails = username + "," + password
-enc1 = enc('temp')
 
 while 1:
+
+	s.send(userDetails.encode("utf-8"))
+	#print('user details sent')
+
+	authentication_result = s.recv(1024).decode("utf-8")
+	if(authentication_result == "SAF010"):
+		print('Authentication Failed...')
+		print('Either the username or password is wrong')
+		username = input("Username: ")
+		password = getpass.getpass(prompt = 'Password: ')
+		userDetails = username + "," + password
+		continue
+
+	elif(authentication_result == "SAS011"):
+		print('Welcome ' + str(username))
+		break
+time.sleep(1)
+
+while 1:
+
 	enc1.setEncryptPass(getpass.getpass(prompt='Encryption Pass: '))
 	#print('Encrypted Pass: ' + enc1.getEncryptPass() + p)
 	#send the passcode to the server
 	s.send(enc1.getEncryptPass().encode("utf-8"))
-	time.sleep(1)
 	#print('enc pass sent')
-	s.send(userDetails.encode("utf-8"))
-	#print('user details sent')
+	
 	encAuth = s.recv(1024).decode("utf-8")
 	#print('recieved enc auth code')
 	if(encAuth == 'SEAF008'):
@@ -52,19 +71,10 @@ while 1:
 		continue
 	elif (encAuth == 'SEAS009'):
 		print('Encryption Pass Accepted')
+		break
 	#cipher_text = encrypt(_getEncryptPass(),userDetails)
 	#s.send(cipher_text.encode())
 	#print("User Details: " + str(userDetails) + " has been sent.")
-	authentication_result = s.recv(1024).decode("utf-8")
-	if(authentication_result == "SAF010"):
-		print('Authentication Failed...')
-		
-		username = input("Username: ")
-		password = getpass.getpass(prompt = 'Password: ')
-		userDetails = username + "," + password
-	elif(authentication_result == "SAS011"):
-		print('Welcome ' + str(username))
-		break
 	
 while 1:
 	cmnd = input("Exit | Send File | Access File:\n")
@@ -73,7 +83,7 @@ while 1:
 	if (cmnd == 'exit'):
 		print('Exiting Client Application')
 		client_exit = 'CEX000'
-		s.send(client_exit.encode('base64', 'strict'))
+		s.send(client_exit.encode("utf-8"))
 		s.close()
 		print('Good-Bye. Thanks for using AJ\'s FTP Client')
 		sys.exit()
