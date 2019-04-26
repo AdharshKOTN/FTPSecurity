@@ -4,18 +4,14 @@ import sys
 import getpass
 from simplecrypt import encrypt, decrypt
 import time
+import base64
 
 HOST = ''
 PORT = 63430 #number greater than 1023 and less than 65536
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-#_auth_count = 0
-
-#def _setAuthCount(val):
-#	_auth_count = val
-#def _getAuthCount()
-#	return _auth_count
+#Encryption Class
 class enc:
 	def __init__(self, val):
 		self.__encryption_pass = val
@@ -43,28 +39,30 @@ enc1 = enc('temp')
 while 1:
 	enc1.setEncryptPass(getpass.getpass(prompt='Encryption Pass: '))
 	#print('Encrypted Pass: ' + enc1.getEncryptPass() + p)
-	s.send(enc1.getEncryptPass().encode())
+	#send the passcode to the server
+	s.send(enc1.getEncryptPass().encode("utf-8"))
 	time.sleep(1)
 	#print('enc pass sent')
-	s.send(userDetails.encode())
+	s.send(userDetails.encode("utf-8"))
 	#print('user details sent')
-	encAuth = s.recv(1024).decode()
+	encAuth = s.recv(1024).decode("utf-8")
 	#print('recieved enc auth code')
-	if(encAuth != 'pass'):
+	if(encAuth == 'SEAF008'):
 		print('Encryption passcode incorrect')
 		continue
-	print('Encryption Pass Accepted')
+	elif (encAuth == 'SEAS009'):
+		print('Encryption Pass Accepted')
 	#cipher_text = encrypt(_getEncryptPass(),userDetails)
 	#s.send(cipher_text.encode())
-	print("User Details: " + str(userDetails) + " has been sent.")
-	authentication_result = s.recv(1024).decode()
-	if(authentication_result != "pass"):
+	#print("User Details: " + str(userDetails) + " has been sent.")
+	authentication_result = s.recv(1024).decode("utf-8")
+	if(authentication_result == "SAF010"):
 		print('Authentication Failed...')
 		
 		username = input("Username: ")
 		password = getpass.getpass(prompt = 'Password: ')
 		userDetails = username + "," + password
-	else:
+	elif(authentication_result == "SAS011"):
 		print('Welcome ' + str(username))
 		break
 	
@@ -75,13 +73,13 @@ while 1:
 	if (cmnd == 'exit'):
 		print('Exiting Client Application')
 		client_exit = 'CEX000'
-		s.send(client_exit.encode())
+		s.send(client_exit.encode('base64', 'strict'))
 		s.close()
 		print('Good-Bye. Thanks for using AJ\'s FTP Client')
 		sys.exit()
 	elif (cmnd == 'send file'):
 		client_send = 'CSF001'
-		s.send(client_send.encode())
+		s.send(client_send.encode("utf-8"))
 		while 1:
 			filename = input('Provide File Name: ')
 			try:
@@ -91,7 +89,7 @@ while 1:
 				print('File does not exist.')
 		
 		print('Sending File Name: ' + str(filename))
-		s.send(filename.encode())
+		s.send(filename.encode("utf-8"))
 
 		file_data = file.read()
 		file_data = encrypt(enc1.getEncryptPass(), file_data)
@@ -101,15 +99,16 @@ while 1:
 		print('The file has finished sending')
 	elif (cmnd == 'access file'):
 		access_file = 'CAF002'
-		s.send(access_file.encode())
+		s.send(access_file.encode("utf-8"))
 		while 1:
 			file_name = input('Provide File Name: ')
-			s.send(file_name.encode())
-			file_status = s.recv(1024).decode()
+			s.send(file_name.encode("utf-8"))
+			file_status = s.recv(1024).decode("utf-8")
 			print(file_status)
-			if(file_status == 'File does not exist.'):
+			if(file_status == 'SFDNE006'):
 				print('File does not exist.')
 			else:
+				print('File does exist.')
 				break
 
 		print('Recieving File...')
@@ -133,8 +132,8 @@ while 1:
 		file.close()
 		
 	elif (cmnd == 'secret close'):
-		secret = 'SECRCL005'
-		s.send(secret.encode())
+		secret = 'CSECRCL005'
+		s.send(secret.encode("utf-8"))
 		print('Secret Command accepted. Server and Client Exiting.')
 		sys.exit()
 	else:
