@@ -5,6 +5,8 @@ GitHub: https://github.com/AdharshKOTN/FTPSecurity
 
 It is suggested to launch this program in linux with two terminals. You must have the latest version of python3 and simple-crypt (a python library) installed.
 
+For these two terminals, navigate to the client and server directory, respective to the terminal.
+
 First launch server.py in cloned terminal with the command: python3 server.py
 
 Then launch client.py in the other terminal with command: python3 client.py
